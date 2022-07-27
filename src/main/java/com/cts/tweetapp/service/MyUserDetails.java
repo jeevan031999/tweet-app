@@ -25,7 +25,6 @@ public class MyUserDetails implements UserDetails {
         return user.getFirstName();
     }
 
-
     public String getLname() {
         return user.getLastName();
     }
