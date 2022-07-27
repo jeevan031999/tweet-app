@@ -1,7 +1,6 @@
 package com.cts.tweetapp.service;
 
 import com.cts.tweetapp.model.User;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -10,25 +9,25 @@ import java.util.Collection;
 public class MyUserDetails implements UserDetails {
 
     private static final long serialVersionUID = 1L;
-    private final User user;
+    private User user;
 
     public MyUserDetails(User user) {
         super();
         this.user = user;
     }
 
-    public String getFirstname() {
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    public String getFname() {
         return user.getFirstName();
     }
 
 
-    public String getLastname() {
+    public String getLname() {
         return user.getLastName();
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
     }
 
     @Override
@@ -38,10 +37,6 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
-    }
-
-    public String getLoginId() {
         return user.getLoginId();
     }
 
@@ -64,5 +59,4 @@ public class MyUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 }
