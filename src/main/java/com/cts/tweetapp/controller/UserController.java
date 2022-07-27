@@ -1,5 +1,6 @@
 package com.cts.tweetapp.controller;
 
+import com.cts.tweetapp.config.Authenticate;
 import com.cts.tweetapp.model.User;
 import com.cts.tweetapp.service.SequenceGeneratorService;
 import com.cts.tweetapp.service.UserService;
@@ -16,12 +17,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.cts.tweetapp.constants.Constants.*;
 import static com.cts.tweetapp.model.User.SEQUENCE_NAME;
 
 @RestController
 @RequestMapping(value = BASE_URL)
 public class UserController {
+
+    @Autowired
+    private Authenticate authenticate;
     @Autowired
     private UserService userService;
     @Autowired
@@ -53,20 +59,22 @@ public class UserController {
 
     @PostMapping(value = LOGIN)
     public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-        authenticate(authenticationRequest.getLoginId(), authenticationRequest.getPassword());
+
+        authenticate.authenticate(authenticationRequest.getLoginId(), authenticationRequest.getPassword());
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getLoginId());
         final String jwttoken = jwtUtilToken.generateToken(userDetails);
         System.out.println("Received request to generate token for " + authenticationRequest);
         return ResponseEntity.ok(new JwtResponse(jwttoken));
     }
 
-    private void authenticate(String username, String password) throws Exception {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        } catch (DisabledException e) {
-            throw new Exception("USER_DISABLED", e);
-        } catch (BadCredentialsException e) {
-            throw new Exception("INVALID_CREDENTIALS", e);
-        }
+    @GetMapping(value = ALL_USER)
+    public List<User> getAllUser(){
+        return userService.getAllUsers();
     }
+
+    @GetMapping(value = BY_ID)
+    public User getUser(@RequestHeader("Authorization") String authorization,@RequestParam("loginId") String loginId){
+        return userService.getUserById(loginId);
+    }
+
 }
