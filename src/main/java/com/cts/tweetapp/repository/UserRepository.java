@@ -11,4 +11,5 @@ public interface UserRepository extends MongoRepository<User,Integer> {
 
     @Query("select user from users where userId: userId & password: password")
     public User findByUserIdAndPassword(String userId,String password);
+    User findByLoginId(String loginId);
 }
