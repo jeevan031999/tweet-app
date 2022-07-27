@@ -46,4 +46,14 @@ public class UserService {
     }
 
 
+    public void forgotPassword(String loginId, String password, String confirmPassword) {
+        User u=userRepository.findByLoginId(loginId);
+        if(u!=null){
+            if(password==confirmPassword){
+                u.setPassword(password);
+                userRepository.save(u);
+            }
+        }
+
+    }
 }

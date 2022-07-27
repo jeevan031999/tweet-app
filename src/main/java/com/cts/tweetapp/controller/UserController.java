@@ -46,12 +46,6 @@ public class UserController {
         user.setId(sequenceGeneratorService.getSequenceNumber(SEQUENCE_NAME));
         return userService.addUser(user);
     }
-
-    //    @GetMapping(value = LOGIN)
-//    public String loginUser(@RequestParam String userId, @RequestParam String password) {
-//        User u = userService.login(userId, password);
-//        return u != null ? "User is present " + u : "User is not available";
-//    }
     @GetMapping("/hi")
     public String hello(@RequestHeader("Authorization") String authorization) {
         return "Hello World" + authorization;
@@ -76,5 +70,9 @@ public class UserController {
     public User getUser(@RequestHeader("Authorization") String authorization,@RequestParam("loginId") String loginId){
         return userService.getUserById(loginId);
     }
+
+//    public String forgotPassword(@RequestParam("loginId") String loginId,@RequestParam("password") String password,@RequestParam("confirmPassword") String confirmPassword){
+//        userService.forgotPassword(loginId,password,confirmPassword);
+//    }
 
 }

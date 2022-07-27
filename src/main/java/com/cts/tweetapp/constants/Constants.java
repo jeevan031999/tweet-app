@@ -10,4 +10,6 @@ public class Constants {
     public static final String BY_ID="/getById";
     public static final String COMMON="/getSimilarUsername";
 
+    public static final String ADD_TWEET="/add";
+
 }
