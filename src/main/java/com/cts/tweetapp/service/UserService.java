@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -16,10 +18,32 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User login(String userId, String password) {
+//    public User login(String userId, String password) {
+//
+//        User us=userRepository.findByUserIdAndPassword(userId,password);
+//        return us!=null?us:null;
+//
+//    }
 
-        User us=userRepository.findByUserIdAndPassword(userId,password);
-        return us!=null?us:null;
-
+    public User updateUser(User user)
+    {
+        return userRepository.save(user);
     }
+
+    public int deleteUser(String loginId){
+        userRepository.deleteByLoginId(loginId);
+        return 1;
+    }
+    public List<User> getAllUsers(){
+        return userRepository.findAll();
+    }
+    public User getUserById(String id){
+        return userRepository.findByLoginId(id);
+    }
+
+    public List<User> getMultipleUser(String loginId){
+        return userRepository.findByLoginIdContaining(loginId);
+    }
+
+
 }
