@@ -18,7 +18,7 @@ public class User {
     public static final String SEQUENCE_NAME="users_sequence";
 
     @Id
-    private Object id;
+    private int id;
 
     @NonNull
     private String firstName;
