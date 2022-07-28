@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         // We don't need CSRF for this example
 
-        httpSecurity.csrf().disable().authorizeRequests().antMatchers(BASE_URL+LOGIN, BASE_URL+REGISTER ).permitAll().anyRequest()
+        httpSecurity.csrf().disable().authorizeRequests().antMatchers(BASE_URL+REGISTER,BASE_URL+LOGIN  ).permitAll().anyRequest()
                 .authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         // Add a filter to validate the tokens with every request
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

@@ -25,29 +25,28 @@ public class UserService {
 //
 //    }
 
-    public User updateUser(User user)
-    {
+    public User updateUser(User user) {
         return userRepository.save(user);
     }
 
-    public int deleteUser(String loginId){
-        userRepository.deleteByLoginId(loginId);
+    public int deleteUser(String username){
+        userRepository.deleteByUsername(username);
         return 1;
     }
     public List<User> getAllUsers(){
         return userRepository.findAll();
     }
-    public User getUserById(String id){
-        return userRepository.findByLoginId(id);
+    public User getUserById(String username){
+        return userRepository.findByUsername(username);
     }
 
-    public List<User> getMultipleUser(String loginId){
-        return userRepository.findByLoginIdContaining(loginId);
+    public List<User> getMultipleUser(String username){
+        return userRepository.findByUsernameContaining(username);
     }
 
 
-    public void forgotPassword(String loginId, String password, String confirmPassword) {
-        User u=userRepository.findByLoginId(loginId);
+    public void forgotPassword(String username, String password, String confirmPassword) {
+        User u=userRepository.findByUsername(username);
         if(u!=null){
             if(password==confirmPassword){
                 u.setPassword(password);

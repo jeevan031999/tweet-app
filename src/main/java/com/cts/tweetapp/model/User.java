@@ -20,6 +20,13 @@ public class User {
     @Id
     private int id;
 
+    @Indexed(unique = true)
+    @NonNull
+    private String username;
+
+    @NonNull
+    private String password;
+
     @NonNull
     private String firstName;
 
@@ -29,13 +36,6 @@ public class User {
     @Indexed(unique = true)
     @NonNull
     private String email;
-
-    @Indexed(unique = true)
-    @NonNull
-    private String loginId;
-
-    @NonNull
-    private String password;
 
     @NonNull
     private long mobileNumber;

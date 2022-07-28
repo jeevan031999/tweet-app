@@ -1,11 +1,14 @@
 package com.cts.tweetapp.model;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Getter
@@ -13,18 +16,18 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Document(collection = "tweets")
 public class Tweet {
 
     @Transient
-    public static final String SEQUENCE_NAME="tweets_sequence";
+    public static final String SEQUENCE_NAME = "tweets_sequence";
     @Id
     private int id;
     private String description;
-    private LocalDateTime tweetDate;
-    private String loginId;
-    private List<String> comments;
-    private String title;
+    @CreatedDate
+    private String tweetDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    private long likes;
+    private User user;
+    private List<Tweet> comments;
     private String tags;
 }

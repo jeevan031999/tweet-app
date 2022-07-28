@@ -11,10 +11,10 @@ import java.util.List;
 @Repository
 public interface UserRepository extends MongoRepository<User,Integer> {
 
-    @Query("select user from users where userId: userId & password: password")
-    public User findByUserIdAndPassword(String userId,String password);
-    User findByLoginId(String loginId);
-    int deleteByLoginId(String loginId);
+//    @Query("select user from users where userId: userId & password: password")
+//    public User findByUserIdAndPassword(String userId,String password);
+    User findByUsername(String loginId);
+    int deleteByUsername(String loginId);
 
-    List<User> findByLoginIdContaining(String loginId);
+    List<User> findByUsernameContaining(String loginId);
 }

@@ -21,14 +21,6 @@ public class MyUserDetails implements UserDetails {
         return null;
     }
 
-    public String getFname() {
-        return user.getFirstName();
-    }
-
-    public String getLname() {
-        return user.getLastName();
-    }
-
     @Override
     public String getPassword() {
         return user.getPassword();
@@ -36,7 +28,7 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getLoginId();
+        return user.getUsername();
     }
 
     @Override
