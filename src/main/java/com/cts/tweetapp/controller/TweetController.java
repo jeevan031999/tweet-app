@@ -43,17 +43,17 @@ public class TweetController {
     }
 
     @DeleteMapping(value = DELETE_TWEET)
-    public void deleteTweetOfUser(@RequestParam("username") String username, @RequestParam("id") int id) {
+    public void deleteTweetOfUser(@PathVariable("username") String username, @PathVariable("id") int id) {
         tweetService.deleteTweetById(id);
     }
 
     @PutMapping(value = LIKE_TWEET)
-    public void LikeTweet(@RequestParam("username") String username, @RequestParam("id") int id) {
+    public void LikeTweet(@PathVariable("username") String username, @PathVariable("id") int id) {
         tweetService.likeTweetById(id);
     }
 
     @PostMapping(value = COMMENTS)
-    public Tweet comments(@RequestParam("username") String username, @RequestParam("id") int id, @RequestBody Tweet tweet)
+    public Tweet comments(@PathVariable("username") String username, @PathVariable("id") int id, @RequestBody Tweet tweet)
             throws Exception {
         return tweetService.replyTweetById(tweet, id);
     }

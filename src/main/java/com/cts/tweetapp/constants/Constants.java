@@ -11,13 +11,14 @@ public class Constants {
 
     public static final String COMMON="/getSimilarUsername";
 
+    //---------------------------------Tweet Constant--------------------------------
     public static final String ADD_TWEET="/{username}/add";
 
     public static final String EDIT_TWEET="/{username}/update/{tweetId}";
 
-    public static final String ALL_TWEET="/allTweet";
+    public static final String ALL_TWEET="/username";
 
-    public static final String TWEET_BY_ID="/{username}";
+    public static final String TWEET_BY_ID="/";
 
     public static final String DELETE_TWEET="/{username}/delete/{id}";
 
