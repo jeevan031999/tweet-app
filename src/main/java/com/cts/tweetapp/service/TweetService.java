@@ -1,7 +1,10 @@
 package com.cts.tweetapp.service;
 
+import com.cts.tweetapp.exception.Exception_Tweet;
+import com.cts.tweetapp.exception.Exception_UserNotFound;
+import com.cts.tweetapp.model.Comments;
 import com.cts.tweetapp.model.Tweet;
-import com.cts.tweetapp.model.User;
+import com.cts.tweetapp.repository.CommentsRepository;
 import com.cts.tweetapp.repository.TweetRepository;
 import com.cts.tweetapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +20,25 @@ public class TweetService {
     private TweetRepository tweetRepository;
 
     @Autowired
+    private CommentsRepository commentsRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
-    public Tweet postTweet(Tweet tweet) {
-        return tweetRepository.save(tweet);
+    public boolean isUsernamePresent(String username) {
+        return userRepository.findByUsername(username) != null ? true : false;
+    }
+
+    public boolean isTweetPresent(int id) {
+        return tweetRepository.findById(id) != null ? true : false;
+    }
+
+    public Tweet postTweetByUsername(String username, Tweet tweet) throws Exception_UserNotFound {
+        if (isUsernamePresent(username)) {
+            tweet.setUsername(username);
+            return tweetRepository.save(tweet);
+        }
+        throw new Exception_UserNotFound("User is not found.");
     }
 
     public Tweet updateTweet(Tweet tweet) {
@@ -32,15 +50,6 @@ public class TweetService {
         return tweetRepository.save(tweet);
     }
 
-    public Tweet commentOnTweet(Tweet tweet, Tweet comment) {
-        tweetRepository.save(comment);
-        List<Tweet> tweetReplies = tweet.getComments();
-        tweetReplies.add(comment);
-        tweet.setComments(tweetReplies);
-        tweetRepository.save(tweet);
-        return comment;
-    }
-
     public void deleteTweet(Tweet tweet) {
         tweetRepository.delete(tweet);
     }
@@ -50,43 +59,36 @@ public class TweetService {
     }
 
     public List<Tweet> getAllTweetsByUsername(String username) {
-        return tweetRepository.findByUserUsername(username);
+        return tweetRepository.findByUsername(username);
     }
 
-    public Tweet postTweetByUsername(Tweet tweet, String username) {
-        User user = userRepository.findByUsername(username);
-        tweet.setUser(user);
-        return tweetRepository.save(tweet);
 
-    }
-
-    public void deleteTweetById(int tweetId) {
-        tweetRepository.deleteById(tweetId);
-    }
-
-    public Tweet replyTweetById(Tweet comment, int tweetId) throws Exception {
-        Optional<Tweet> parentTweet = tweetRepository.findById(tweetId);
-        if (parentTweet.isPresent()) {
-            List<Tweet> replies = parentTweet.get().getComments();
-            replies.add(comment);
-            tweetRepository.save(parentTweet.get());
+    public void deleteTweetById(int tweetId,String username) throws Exception_Tweet {
+        if(isTweetPresent(tweetId)){
+            tweetRepository.deleteById(tweetId);
         }
-        else {
-            throw new Exception("Incorrect or deleted tweet id.");
-        }
-        return comment;
-
+        throw new Exception_Tweet("Tweet is not present for this id.");
 
     }
 
-    public void likeTweetById(int tweetId){
+    public Comments replyTweetById(int id, Comments comments,String username) throws Exception_Tweet {
+        if (isTweetPresent(id)) {
+            comments.setTweetId(id);
+            comments.setUsername(username);
+            commentsRepository.save(comments);
+        } else {
+            throw new Exception_Tweet("Incorrect or deleted tweet id.");
+        }
+        return comments;
+    }
+
+    public void likeTweetById(int tweetId) {
         Optional<Tweet> tweet = tweetRepository.findById(tweetId);
         if (tweet.isPresent()) {
-            tweet.get().setLikes(tweet.get().getLikes()+1);
+            tweet.get().setLikes(tweet.get().getLikes() + 1);
             tweetRepository.save(tweet.get());
         }
 
     }
-
 
 }

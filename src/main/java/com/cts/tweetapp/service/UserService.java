@@ -14,7 +14,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User addUser(User user){
+    public User addUser(User user) {
         return userRepository.save(user);
     }
 
@@ -29,30 +29,30 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public int deleteUser(String username){
+    public int deleteUser(String username) {
         userRepository.deleteByUsername(username);
         return 1;
     }
-    public List<User> getAllUsers(){
+
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
-    public User getUserById(String username){
+
+    public User getUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
-    public List<User> getMultipleUser(String username){
+    public List<User> getMultipleUser(String username) {
         return userRepository.findByUsernameContaining(username);
     }
 
-
     public void forgotPassword(String username, String password, String confirmPassword) {
-        User u=userRepository.findByUsername(username);
-        if(u!=null){
-            if(password==confirmPassword){
+        User u = userRepository.findByUsername(username);
+        if (u != null) {
+            if (password == confirmPassword) {
                 u.setPassword(password);
                 userRepository.save(u);
             }
         }
-
     }
 }

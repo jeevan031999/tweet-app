@@ -43,6 +43,7 @@ public class UserController {
         user.setId(sequenceGeneratorService.getSequenceNumber(SEQUENCE_NAME));
         return userService.addUser(user);
     }
+
     @GetMapping("/hi")
     public String hello(@RequestHeader("Authorization") String authorization) {
         return "Hello World" + authorization;
@@ -59,13 +60,13 @@ public class UserController {
     }
 
     @GetMapping(value = ALL_USER)
-    public List<User> getAllUser(){
+    public List<User> getAllUser() {
         return userService.getAllUsers();
     }
 
     @GetMapping(value = BY_ID)
-    public User getUser(@RequestHeader("Authorization") String authorization,@RequestParam("loginId") String loginId){
-        return userService.getUserById(loginId);
+    public User getUser(@RequestHeader("Authorization") String authorization, @RequestParam("username") String username) {
+        return userService.getUserByUsername(username);
     }
 
 //    public String forgotPassword(@RequestParam("loginId") String loginId,@RequestParam("password") String password,@RequestParam("confirmPassword") String confirmPassword){

@@ -8,6 +8,5 @@ import java.util.List;
 
 @Repository
 public interface TweetRepository extends MongoRepository<Tweet,Integer> {
-
-    List<Tweet> findByUserUsername(String username);
+    List<Tweet> findByUsername(String username);
 }

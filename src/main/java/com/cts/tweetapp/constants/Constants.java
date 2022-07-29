@@ -16,15 +16,15 @@ public class Constants {
 
     public static final String EDIT_TWEET="/{username}/update/{tweetId}";
 
-    public static final String ALL_TWEET="/username";
+    public static final String ALL_TWEET="/all";
 
-    public static final String TWEET_BY_ID="/";
+    public static final String TWEET_BY_ID="/{username}";
 
     public static final String DELETE_TWEET="/{username}/delete/{id}";
 
     public static final String LIKE_TWEET="/{username}/like/{id}";
 
-    public static final String COMMENTS="/<username>/reply/<id>";
+    public static final String COMMENTS="/{username}/reply/{id}";
 
 
 
