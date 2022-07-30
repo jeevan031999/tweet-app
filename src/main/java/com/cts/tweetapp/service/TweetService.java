@@ -3,6 +3,7 @@ package com.cts.tweetapp.service;
 import com.cts.tweetapp.exception.Exception_Tweet;
 import com.cts.tweetapp.model.Comments;
 import com.cts.tweetapp.model.Tweet;
+import com.cts.tweetapp.model.User;
 import com.cts.tweetapp.repository.CommentsRepository;
 import com.cts.tweetapp.repository.TweetRepository;
 import com.cts.tweetapp.repository.UserRepository;
@@ -56,10 +57,8 @@ public class TweetService {
 
     }
 
-    public Tweet updateTweet(String username,int id,Tweet tweet) throws UsernameNotFoundException {
-        if(isUsernamePresent(username) && id== tweet.getId())
-             return tweetRepository.save(tweet);
-        throw new UsernameNotFoundException("user not found");
+    public Tweet updateTweet(Tweet tweet) {
+        return tweetRepository.save(tweet);
     }
 
     public Tweet likes(Tweet tweet) {
