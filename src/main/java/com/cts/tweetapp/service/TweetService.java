@@ -1,7 +1,6 @@
 package com.cts.tweetapp.service;
 
 import com.cts.tweetapp.exception.Exception_Tweet;
-import com.cts.tweetapp.exception.Exception_UserNotFound;
 import com.cts.tweetapp.model.Comments;
 import com.cts.tweetapp.model.Tweet;
 import com.cts.tweetapp.model.User;
