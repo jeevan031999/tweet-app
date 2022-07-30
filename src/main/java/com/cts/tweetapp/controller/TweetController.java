@@ -1,10 +1,8 @@
 package com.cts.tweetapp.controller;
 
 import com.cts.tweetapp.exception.Exception_Tweet;
-import com.cts.tweetapp.exception.Exception_UserNotFound;
 import com.cts.tweetapp.model.Comments;
 import com.cts.tweetapp.model.Tweet;
-import com.cts.tweetapp.model.User;
 import com.cts.tweetapp.service.SequenceGeneratorService;
 import com.cts.tweetapp.service.TweetService;
 import com.cts.tweetapp.service.UserService;
@@ -13,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.cts.tweetapp.constants.Constants.*;
 import static com.cts.tweetapp.model.Comments.SEQ_NAME;
@@ -40,9 +37,9 @@ public class TweetController {
     }
 
     @PutMapping(value = EDIT_TWEET)
-    public Tweet editTweet(@RequestParam("username") String username, @RequestParam("id") int id, @RequestHeader("Authorization") String authorization, @RequestBody Tweet tweet) {
+    public Tweet editTweet(@PathVariable("username") String username, @RequestParam("id") int id, @RequestHeader("Authorization") String authorization, @RequestBody Tweet tweet) {
         tweet.setId(sequenceGeneratorService.getSequenceNumber(SEQUENCE_NAME));
-        return tweetService.updateTweet(tweet);
+        return tweetService.updateTweet(username,id,tweet);
     }
 
     @GetMapping(value = ALL_TWEET)

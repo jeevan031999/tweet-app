@@ -15,7 +15,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class JwtUtil {
     // @Value("${jwt.secret}")
-    private String secret = "test";
+    private final String secret = "test";
  
     // retrieve username from jwt token
     public String getUsernameFromToken(String token) {
