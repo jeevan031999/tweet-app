@@ -30,6 +30,5 @@ public class Tweet {
     private String tweetDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     private long likes;
     private String username;
-    private List<Comments> comments;
     private String tags;
 }

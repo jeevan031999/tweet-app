@@ -14,7 +14,7 @@ public class Constants {
     //---------------------------------Tweet Constant--------------------------------
     public static final String ADD_TWEET="/{username}/add";
 
-    public static final String EDIT_TWEET="/{username}/update/{id}";
+    public static final String EDIT_TWEET="/{username}/update/{tweetId}";
 
     public static final String ALL_TWEET="/all";
 
