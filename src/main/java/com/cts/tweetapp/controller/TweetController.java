@@ -40,9 +40,9 @@ public class TweetController {
     }
 
     @PutMapping(value = EDIT_TWEET)
-    public Tweet editTweet(@RequestParam("username") String username, @RequestParam("id") int id, @RequestHeader("Authorization") String authorization, @RequestBody Tweet tweet) {
+    public Tweet editTweet(@PathVariable("username") String username, @PathVariable("id") int id, @RequestHeader("Authorization") String authorization, @RequestBody Tweet tweet) {
         tweet.setId(sequenceGeneratorService.getSequenceNumber(SEQUENCE_NAME));
-        return tweetService.updateTweet(tweet);
+        return tweetService.updateTweet(id,username,tweet);
     }
 
     @GetMapping(value = ALL_TWEET)

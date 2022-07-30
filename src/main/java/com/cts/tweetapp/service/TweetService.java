@@ -8,11 +8,14 @@ import com.cts.tweetapp.model.User;
 import com.cts.tweetapp.repository.CommentsRepository;
 import com.cts.tweetapp.repository.TweetRepository;
 import com.cts.tweetapp.repository.UserRepository;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import jdk.jshell.spi.ExecutionControl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.security.KeyException;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,7 +61,9 @@ public class TweetService {
 
     }
 
-    public Tweet updateTweet(Tweet tweet) {
+    public Tweet updateTweet(int id,String username,Tweet tweet) {
+        tweet.setUsername(username);
+        tweet.setId(id);
         return tweetRepository.save(tweet);
     }
 
@@ -80,11 +85,16 @@ public class TweetService {
     }
 
 
-    public void deleteTweetById(int tweetId,String username) throws Exception_Tweet {
+    public void deleteTweetById(int tweetId,String username)  {
         if(isTweetPresent(tweetId)){
             tweetRepository.deleteById(tweetId);
+            log.info("user deleted successfully");
         }
-        throw new Exception_Tweet("Tweet is not present for this id.");
+        else{
+            log.error("tweet not found for this id");
+            throw new UsernameNotFoundException("tweet not found for this id");
+        }
+
 
     }
 
@@ -92,11 +102,11 @@ public class TweetService {
         if (isTweetPresent(id)) {
             comments.setTweetId(id);
             comments.setUsername(username);
-            commentsRepository.save(comments);
+            return commentsRepository.save(comments);
         } else {
-            throw new Exception_Tweet("Incorrect or deleted tweet id.");
+             throw new NullPointerException("tweet not present for this user");
         }
-        return comments;
+
     }
 
     public void likeTweetById(int tweetId) {
