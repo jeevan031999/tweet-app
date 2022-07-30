@@ -4,17 +4,24 @@ import com.cts.tweetapp.exception.Exception_Tweet;
 import com.cts.tweetapp.exception.Exception_UserNotFound;
 import com.cts.tweetapp.model.Comments;
 import com.cts.tweetapp.model.Tweet;
+import com.cts.tweetapp.model.User;
 import com.cts.tweetapp.repository.CommentsRepository;
 import com.cts.tweetapp.repository.TweetRepository;
 import com.cts.tweetapp.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class TweetService {
+
+    @Autowired
+    UserService userService;
 
     @Autowired
     private TweetRepository tweetRepository;
@@ -33,12 +40,22 @@ public class TweetService {
         return tweetRepository.findById(id) != null ? true : false;
     }
 
-    public Tweet postTweetByUsername(String username, Tweet tweet) throws Exception_UserNotFound {
-        if (isUsernamePresent(username)) {
+    public Tweet postTweetByUsername(String username, Tweet tweet)  {
+        if(isUsernamePresent(username)){
             tweet.setUsername(username);
+            log.info(username);
+            log.info(tweet.toString());
             return tweetRepository.save(tweet);
         }
-        throw new Exception_UserNotFound("User is not found.");
+        else{
+            log.error("username not found error");
+            throw new UsernameNotFoundException("username not found error");
+        }
+
+
+
+
+
     }
 
     public Tweet updateTweet(Tweet tweet) {

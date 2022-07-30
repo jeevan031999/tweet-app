@@ -4,12 +4,16 @@ import com.cts.tweetapp.exception.Exception_Tweet;
 import com.cts.tweetapp.exception.Exception_UserNotFound;
 import com.cts.tweetapp.model.Comments;
 import com.cts.tweetapp.model.Tweet;
+import com.cts.tweetapp.model.User;
 import com.cts.tweetapp.service.SequenceGeneratorService;
 import com.cts.tweetapp.service.TweetService;
+import com.cts.tweetapp.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.cts.tweetapp.constants.Constants.*;
 import static com.cts.tweetapp.model.Comments.SEQ_NAME;
@@ -17,15 +21,20 @@ import static com.cts.tweetapp.model.Tweet.SEQUENCE_NAME;
 
 @RestController
 @RequestMapping(value = BASE_URL)
+@Slf4j
 public class TweetController {
     @Autowired
     private TweetService tweetService;
 
     @Autowired
+    UserService userService;
+
+    @Autowired
     private SequenceGeneratorService sequenceGeneratorService;
 
     @PostMapping(value = ADD_TWEET)
-    public Tweet addTweet(@RequestHeader("Authorization") String authorization, @PathVariable("username") String username, @RequestBody Tweet tweet) throws Exception_UserNotFound {
+    public Tweet addTweet(@RequestHeader("Authorization") String authorization, @PathVariable("username") String username, @RequestBody Tweet tweet)  {
+
         tweet.setId(sequenceGeneratorService.getSequenceNumber(SEQUENCE_NAME));
         return tweetService.postTweetByUsername(username, tweet);
     }
