@@ -31,6 +31,7 @@ public class TweetService {
     private UserRepository userRepository;
 
     public boolean isUsernamePresent(String username) {
+        //
         return userRepository.findByUsername(username) != null ? true : false;
     }
 
