@@ -1,5 +1,6 @@
 package com.cts.tweetapp.service;
 
+
 import com.cts.tweetapp.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

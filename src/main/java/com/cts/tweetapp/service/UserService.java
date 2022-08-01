@@ -9,7 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.InputMismatchException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Slf4j
@@ -19,12 +22,21 @@ public class UserService {
     private UserRepository userRepository;
 
     public User addUser(User user) throws Exception_UserAlreadyExists {
-        User existingUser
-                = userRepository.findByUsername(user.getUsername());
+        User existingUser = userRepository.findByUsername(user.getUsername());
         if(existingUser==null) {
-            return userRepository.save(user);
+            String mail=user.getEmail();
+            String regex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(mail);
+            if(matcher.matches()==true) {
+                log.info("user Added");
+                return userRepository.save(user);
+
+            }
+            else{
+                throw  new InputMismatchException("field not be in format");
+            }
         }
-        log.info("user Added");
         throw new Exception_UserAlreadyExists("User already exists");
     }
 

@@ -5,5 +5,31 @@ spring:
       port: 27017
       host: localhost
       auto-index-creation: true
+---
+spring:
+  profiles:
+    active: local
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  kafka:
+    template:
+      default-topic: tweet-app
+    producer:
+      bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+#      key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
+      consumer:
+        group-id: library-event-listener-group
+        bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+#        key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
+        value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    admin:
+      properties:
+        bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+
+---
 

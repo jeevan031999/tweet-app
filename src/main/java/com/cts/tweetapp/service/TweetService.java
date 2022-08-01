@@ -8,7 +8,6 @@ import com.cts.tweetapp.repository.TweetRepository;
 import com.cts.tweetapp.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,27 +39,23 @@ public class TweetService {
         return tweetRepository.findById(id) != null ? true : false;
     }
 
-    public Tweet postTweetByUsername(String username, Tweet tweet)  {
-        if(isUsernamePresent(username)){
-            tweet.setUsername(username);
-            log.info(username);
-            log.info(tweet.toString());
-            return tweetRepository.save(tweet);
-        }
-        else{
-            log.error("username not found error");
-            throw new UsernameNotFoundException("username not found error");
-        }
-
-
-
-
-
-    }
-
-    public Tweet updateTweet(Tweet tweet) {
-        return tweetRepository.save(tweet);
-    }
+//    public Tweet postTweetByUsername(String username, Tweet tweet)  {
+//        if(isUsernamePresent(username)){
+//            tweet.setUsername(username);
+//            log.info(username);
+//            log.info(tweet.toString());
+//            return tweetRepository.save(tweet);
+//        }
+//        else{
+//            log.error("username not found error");
+//            throw new UsernameNotFoundException("username not found error");
+//        }
+//
+//    }
+//
+//    public Tweet updateTweet(Tweet tweet) {
+//        return tweetRepository.save(tweet);
+//    }
 
     public Tweet likes(Tweet tweet) {
         tweet.setLikes(tweet.getLikes() + 1);

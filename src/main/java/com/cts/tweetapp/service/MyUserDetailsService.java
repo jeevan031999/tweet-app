@@ -1,5 +1,6 @@
 package com.cts.tweetapp.service;
 
+
 import com.cts.tweetapp.model.User;
 import com.cts.tweetapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+;
+//change user package
 
 @Service
 public class MyUserDetailsService implements UserDetailsService {
