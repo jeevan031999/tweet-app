@@ -6,7 +6,11 @@ import com.cts.tweetapp.model.Tweet;
 import com.cts.tweetapp.repository.CommentsRepository;
 import com.cts.tweetapp.repository.TweetRepository;
 import com.cts.tweetapp.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +32,10 @@ public class TweetService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    ObjectMapper objectMapper;
 
     public boolean isUsernamePresent(String username) {
-        //
         return userRepository.findByUsername(username) != null ? true : false;
     }
 
@@ -39,23 +44,43 @@ public class TweetService {
         return tweetRepository.findById(id) != null ? true : false;
     }
 
-//    public Tweet postTweetByUsername(String username, Tweet tweet)  {
-//        if(isUsernamePresent(username)){
-//            tweet.setUsername(username);
-//            log.info(username);
-//            log.info(tweet.toString());
-//            return tweetRepository.save(tweet);
-//        }
-//        else{
-//            log.error("username not found error");
-//            throw new UsernameNotFoundException("username not found error");
-//        }
-//
-//    }
-//
-//    public Tweet updateTweet(Tweet tweet) {
-//        return tweetRepository.save(tweet);
-//    }
+    // for post and update tweet
+    public void proceedTweet(ConsumerRecord<Integer, String> consumerRecord) throws JsonMappingException, JsonProcessingException {
+        Tweet tweet =objectMapper.readValue(consumerRecord.value(),Tweet.class);
+        log.info("tweet {}",tweet);
+        switch (tweet.getTweetType()) {
+            case NEW:
+                saveMethod(tweet);
+                break;
+            case UPDATE:
+                validate(tweet);
+                saveMethod(tweet);
+                break;
+
+            default:
+                log.error("not valid data");
+                break;
+        }
+
+    }
+
+    private void validate(Tweet tweet) {
+        Optional<Tweet> tweetOptional=tweetRepository.findById(tweet.getId());
+        if(tweetOptional.isEmpty()) {
+            throw new IllegalArgumentException("tweet id is not valid");
+        }
+        tweet.setId(tweetOptional.get().getId());
+        tweet.setUsername(tweetOptional.get().getUsername());
+        log.info("Validation is successful for the tweet : {} ", tweetOptional.get());
+
+    }
+
+    private void saveMethod(Tweet tweet) {
+        tweetRepository.save(tweet);
+        log.info("Successfully Persisted the tweet {} ", tweet);
+
+    }
+
 
     public Tweet likes(Tweet tweet) {
         tweet.setLikes(tweet.getLikes() + 1);

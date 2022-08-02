@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+
 @Getter
 @Setter
 @ToString
@@ -20,7 +21,9 @@ public  class Tweet {
    @Transient
     public static final String SEQUENCE_NAME = "tweets_sequence";
     @Id
-    private Integer id;
+    private int id;
+    @Transient
+    private TweetType tweetType;
     private String description;
     @CreatedDate
     private String tweetDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));

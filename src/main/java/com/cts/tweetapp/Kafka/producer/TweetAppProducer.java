@@ -16,33 +16,33 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 @Slf4j
 public class TweetAppProducer {
     @Autowired
-    KafkaTemplate< Integer, String> kafkaTemplate;
+    KafkaTemplate<Integer, String> kafkaTemplate;
 
     @Autowired
     ObjectMapper objectMapper;
 
-    String topics="tweet-app";
+    String topics = "tweet-app";
 
     public void posttweet(Tweet tweet) throws JsonProcessingException {
-        //Integer key=tweet.getId();
-        String value=objectMapper.writeValueAsString(tweet);
-        ListenableFuture<SendResult<Integer,String>> listenableFuture=kafkaTemplate.sendDefault(value);
-        listenableFuture.addCallback(new ListenableFutureCallback<SendResult<Integer,String>>() {
+        String value = objectMapper.writeValueAsString(tweet);
+        ListenableFuture<SendResult<Integer, String>> listenableFuture = kafkaTemplate.sendDefault(value);
+        listenableFuture.addCallback(new ListenableFutureCallback<SendResult<Integer, String>>() {
 
             @Override
             public void onSuccess(SendResult<Integer, String> result) {
-                handleSuccess( value, result);
+                handleSuccess(value, result);
 
             }
 
             @Override
             public void onFailure(Throwable ex) {
-                handleFailure(value,ex);
+                handleFailure(value, ex);
             }
         });
 
     }
-    protected void handleFailure( String value, Throwable ex) {
+
+    protected void handleFailure(String value, Throwable ex) {
         log.error("Error Sending the Message and the exception is {}", ex.getMessage());
         try {
             throw ex;
@@ -51,37 +51,11 @@ public class TweetAppProducer {
         }
 
     }
+
     private void handleSuccess(String value, SendResult<Integer, String> result) {
         log.info("Message Sent SuccessFully for the key : {} and the value is {} , partition is {}", value, result.getRecordMetadata().partition());
     }
 
-    public void updateTweet(Tweet tweet) throws JsonProcessingException {
-        Integer key=tweet.getId();
-        if(tweet.getId()!=null){
-            String value=objectMapper.writeValueAsString(tweet);
-            ListenableFuture<SendResult<Integer,String>> listenableFuture=kafkaTemplate.sendDefault(value);
-            listenableFuture.addCallback(new ListenableFutureCallback<SendResult<Integer,String>>() {
-
-                @Override
-                public void onSuccess(SendResult<Integer, String> result) {
-                    handleSuccess( value, result);
-
-                }
-
-                @Override
-                public void onFailure(Throwable ex) {
-                    handleFailure(value,ex);
-                }
-            });
-        }
-
-
-
-    }
-
-
-
-
-
-
 }
+
+

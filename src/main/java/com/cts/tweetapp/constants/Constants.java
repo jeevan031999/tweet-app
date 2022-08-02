@@ -9,6 +9,7 @@ public class Constants {
     public static final String ALL_USER="/allUser";
     public static final String BY_ID="/getById/{username}";
     public static final String COMMON_USERNAME="user/search/{username}";
+    public static final String GET_UNAME="/getuname";
 
     //---------------------------------Tweet Constant--------------------------------
     public static final String ADD_TWEET="/{username}/add";

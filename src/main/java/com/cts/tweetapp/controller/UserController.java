@@ -62,25 +62,41 @@ public class UserController {
     }
 
     @GetMapping(value = ALL_USER)
-    public ResponseEntity<List<User>> getAllUser(@RequestHeader("Authorization") String authorization)
-            throws Exception_UserDoesNotExists {
+    public ResponseEntity<List<User>> getAllUser(@RequestHeader("Authorization") String authorization) throws Exception_UserDoesNotExists {
         List<User> u= userService.getAllUsers();
         return new ResponseEntity<>(u, HttpStatus.OK);
     }
 
     @GetMapping(value = BY_ID)
-    public ResponseEntity<User> getUser(@RequestHeader("Authorization") String authorization,
-                                        @PathVariable("username") String username) throws Exception_UserDoesNotExists {
-        User u= userService.getUserByUsername(username);
-        return new ResponseEntity<>(u, HttpStatus.OK);
+    public ResponseEntity<?> getUser(@RequestHeader("Authorization") String authorization, @PathVariable("username") String username) throws Exception_UserDoesNotExists {
+        String token =authorization.substring(7);
+        String uname= jwtUtilToken.getUsernameFromToken(token);
+        if(username.equals(uname)) {
+            User u = userService.getUserByUsername(username);
+            return new ResponseEntity<>(u, HttpStatus.OK);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("INVALID USER");
+        }
     }
 
     @GetMapping(value = COMMON_USERNAME)
-    public ResponseEntity<List<User>> getPartialSameNameUsers(@RequestHeader("Authorization") String authorization,
-                                              @PathVariable("username") String username) throws InvalidUsernameException {
-        List<User> users=userService.getUserByPartialName(username);
-        return new ResponseEntity<>(users,HttpStatus.OK);
+    public ResponseEntity<?> getPartialSameNameUsers(@RequestHeader("Authorization") String authorization, @PathVariable("username") String username) throws InvalidUsernameException {
+        String token =authorization.substring(7);
+        String uname= jwtUtilToken.getUsernameFromToken(token);
+        if(username.equals(uname)) {
+            List<User> users = userService.getUserByPartialName(username);
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("INVALID USER");
+        }
 
+    }
+    @GetMapping(value = GET_UNAME)
+    public String getUname(@RequestHeader("Authorization") String authorization) {
+        String token =authorization.substring(7);
+        return jwtUtilToken.getUsernameFromToken(token);
     }
 
 }
