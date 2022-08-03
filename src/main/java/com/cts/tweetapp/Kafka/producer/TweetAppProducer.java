@@ -24,13 +24,14 @@ public class TweetAppProducer {
     String topics = "tweet-app";
 
     public void posttweet(Tweet tweet) throws JsonProcessingException {
+        int key=Integer.valueOf(tweet.getId());
         String value = objectMapper.writeValueAsString(tweet);
-        ListenableFuture<SendResult<Integer, String>> listenableFuture = kafkaTemplate.sendDefault(value);
+        ListenableFuture<SendResult<Integer, String>> listenableFuture = kafkaTemplate.sendDefault(key,value);
         listenableFuture.addCallback(new ListenableFutureCallback<SendResult<Integer, String>>() {
 
             @Override
             public void onSuccess(SendResult<Integer, String> result) {
-                handleSuccess(value, result);
+                handleSuccess( key,value, result);
 
             }
 
@@ -52,7 +53,7 @@ public class TweetAppProducer {
 
     }
 
-    private void handleSuccess(String value, SendResult<Integer, String> result) {
+    private void handleSuccess(int key,String value, SendResult<Integer, String> result) {
         log.info("Message Sent SuccessFully for the key : {} and the value is {} , partition is {}", value, result.getRecordMetadata().partition());
     }
 

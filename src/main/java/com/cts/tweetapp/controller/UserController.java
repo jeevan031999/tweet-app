@@ -3,7 +3,6 @@ package com.cts.tweetapp.controller;
 import com.cts.tweetapp.config.Authenticate;
 import com.cts.tweetapp.exception.Exception_UserAlreadyExists;
 import com.cts.tweetapp.exception.Exception_UserDoesNotExists;
-import com.cts.tweetapp.exception.InvalidUsernameException;
 import com.cts.tweetapp.model.User;
 import com.cts.tweetapp.service.SequenceGeneratorService;
 import com.cts.tweetapp.service.UserService;
@@ -79,8 +78,18 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("INVALID USER");
         }
     }
+    @GetMapping(value = GET_UNAME)
+    public String getUname(@RequestHeader("Authorization") String authorization) {
+        String token =authorization.substring(7);
+        return jwtUtilToken.getUsernameFromToken(token);
+    }
 
-    @GetMapping(value = COMMON_USERNAME)
+
+
+
+  // Ignore this method////////
+
+ /*   @GetMapping(value = COMMON_USERNAME)
     public ResponseEntity<?> getPartialSameNameUsers(@RequestHeader("Authorization") String authorization, @PathVariable("username") String username) throws InvalidUsernameException {
         String token =authorization.substring(7);
         String uname= jwtUtilToken.getUsernameFromToken(token);
@@ -91,12 +100,9 @@ public class UserController {
         else{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("INVALID USER");
         }
+    }
+    */
 
-    }
-    @GetMapping(value = GET_UNAME)
-    public String getUname(@RequestHeader("Authorization") String authorization) {
-        String token =authorization.substring(7);
-        return jwtUtilToken.getUsernameFromToken(token);
-    }
+
 
 }

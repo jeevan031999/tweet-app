@@ -1,6 +1,7 @@
 package com.cts.tweetapp.service;
 
 import com.cts.tweetapp.exception.Exception_Tweet;
+import com.cts.tweetapp.exception.InvalidUsernameException;
 import com.cts.tweetapp.model.Comments;
 import com.cts.tweetapp.model.Tweet;
 import com.cts.tweetapp.repository.CommentsRepository;
@@ -45,7 +46,7 @@ public class TweetService {
     }
 
     // for post and update tweet
-    public void proceedTweet(ConsumerRecord<Integer, String> consumerRecord) throws JsonMappingException, JsonProcessingException {
+    public void proceedTweet(ConsumerRecord<Integer, String> consumerRecord) throws JsonMappingException, JsonProcessingException, InvalidUsernameException {
         Tweet tweet =objectMapper.readValue(consumerRecord.value(),Tweet.class);
         log.info("tweet {}",tweet);
         switch (tweet.getTweetType()) {
@@ -64,20 +65,27 @@ public class TweetService {
 
     }
 
-    private void validate(Tweet tweet) {
+    private void validate(Tweet tweet) throws InvalidUsernameException {
         Optional<Tweet> tweetOptional=tweetRepository.findById(tweet.getId());
         if(tweetOptional.isEmpty()) {
             throw new IllegalArgumentException("tweet id is not valid");
         }
-        tweet.setId(tweetOptional.get().getId());
-        tweet.setUsername(tweetOptional.get().getUsername());
-        log.info("Validation is successful for the tweet : {} ", tweetOptional.get());
+        if(tweet.getUsername().equals(tweetOptional.get().getUsername())) {
+            tweet.setId(tweetOptional.get().getId());
+            tweet.setUsername(tweetOptional.get().getUsername());
+            log.info("Validation is successful for the tweet : {} ", tweetOptional.get());
+        }
+        else{
+            throw new InvalidUsernameException("Invalid username");
+        }
 
     }
 
     private void saveMethod(Tweet tweet) {
         tweetRepository.save(tweet);
         log.info("Successfully Persisted the tweet {} ", tweet);
+
+
 
     }
 

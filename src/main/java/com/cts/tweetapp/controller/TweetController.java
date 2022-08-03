@@ -75,8 +75,6 @@ public class TweetController {
 
     @GetMapping(value = ALL_TWEET)
     public List<Tweet> getAllTweets(@RequestHeader("Authorization") String authorization) {
-        String token =authorization.substring(7);
-        String uname= jwtUtilToken.getUsernameFromToken(token);
         return tweetService.getAllTweets();
     }
 
@@ -109,28 +107,17 @@ public class TweetController {
 
     @PutMapping(value = LIKE_TWEET)
     public ResponseEntity<?> LikeTweet(@RequestHeader("Authorization") String authorization, @PathVariable("username") String username, @PathVariable("id") int id) {
-        String token =authorization.substring(7);
-        String uname= jwtUtilToken.getUsernameFromToken(token);
-        if(username.equals(uname)) {
             tweetService.likeTweetById(id);
             return ResponseEntity.status(HttpStatus.OK).body("like successfully");
         }
-        else{
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("INVALID USER");
-        }
-    }
+
 
     @PostMapping(value = COMMENTS)
     public ResponseEntity<?> comments(@RequestHeader("Authorization") String authorization, @PathVariable("username") String username, @PathVariable("id") int id, @RequestBody Comments comments) throws Exception {
-        String token =authorization.substring(7);
-        String uname= jwtUtilToken.getUsernameFromToken(token);
-        if(username.equals(uname)) {
             comments.setCommentId(sequenceGeneratorService.getSequenceNumber(SEQ_NAME));
             tweetService.replyTweetById(id, comments, username);
             return ResponseEntity.status(HttpStatus.OK).body("like successfully");
-        }
-        else{
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("INVALID USER");
+
         }
     }
-}
+

@@ -2,7 +2,6 @@ package com.cts.tweetapp.service;
 
 import com.cts.tweetapp.exception.Exception_UserAlreadyExists;
 import com.cts.tweetapp.exception.Exception_UserDoesNotExists;
-import com.cts.tweetapp.exception.InvalidUsernameException;
 import com.cts.tweetapp.model.User;
 import com.cts.tweetapp.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -41,9 +40,8 @@ public class UserService {
     }
 
     public User updateUser(User user) throws Exception_UserAlreadyExists {
-        User existingUser
-                = userRepository.findByUsername(user.getUsername());
-        if(existingUser==null) {
+        User existingUser = userRepository.findByUsername(user.getUsername());
+        if(existingUser!=null) {
             return userRepository.save(user);
         }
         log.info("user updated");
@@ -79,13 +77,18 @@ public class UserService {
         return user;
     }
 
-    public List<User> getUserByPartialName(String username) throws InvalidUsernameException {
 
-        if(userRepository.findByUsernameContaining(username)== null)
-            throw new InvalidUsernameException("Please enter a valid username");
-        log.info(" Getting user by username.."+username);
-        return userRepository.findByUsernameContaining(username);
-    }
+
+
+ //    ignore this method
+//
+//    public List<User> getUserByPartialName(String username) throws InvalidUsernameException {
+//
+//        if(userRepository.findByUsernameContaining(username)== null)
+//            throw new InvalidUsernameException("Please enter a valid username");
+//        log.info(" Getting user by username.."+username);
+//        return userRepository.findByUsernameContaining(username);
+//    }
 
 
 
