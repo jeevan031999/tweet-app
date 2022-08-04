@@ -20,7 +20,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User addUser(User user) throws Exception_UserAlreadyExists {
+    public User addUser(User user) throws Exception_UserAlreadyExists,InputMismatchException {
         User existingUser = userRepository.findByUsername(user.getUsername());
         if(existingUser==null) {
             String mail=user.getEmail();
@@ -39,26 +39,14 @@ public class UserService {
         throw new Exception_UserAlreadyExists("User already exists");
     }
 
-    public User updateUser(User user) throws Exception_UserAlreadyExists {
-        User existingUser = userRepository.findByUsername(user.getUsername());
-        if(existingUser!=null) {
-            return userRepository.save(user);
+    public User forgotPassword(String username, String newPassword) throws Exception_UserDoesNotExists {
+        User existingUser = userRepository.findByUsername(username);
+        if (existingUser != null) {
+            existingUser.setPassword(newPassword);
+            return userRepository.save(existingUser);
         }
-        log.info("user updated");
-        throw new Exception_UserAlreadyExists("User already exists");
+        throw new Exception_UserDoesNotExists("can't change user does not exist");
     }
-
-    public void deleteUser(String username) throws Exception_UserDoesNotExists {
-        User u = null;
-        User existingUser
-                = userRepository.findByUsername(u.getUsername());
-        if(existingUser.getUsername()==username) {
-            userRepository.deleteByUsername(username);
-            log.warn("user delete");
-        }
-        throw new Exception_UserDoesNotExists("User not found");
-    }
-
     public List<User> getAllUsers() throws Exception_UserDoesNotExists {
         List<User> user= userRepository.findAll();
         if(user==null){

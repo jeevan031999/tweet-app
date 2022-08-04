@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.InputMismatchException;
 import java.util.List;
 
 import static com.cts.tweetapp.constants.Constants.*;
@@ -44,7 +45,7 @@ public class UserController {
 
 
     @PostMapping(value = REGISTER)
-    public ResponseEntity<User> saveUser(@RequestBody User user) throws Exception_UserAlreadyExists {
+    public ResponseEntity<User> saveUser(@RequestBody User user) throws Exception_UserAlreadyExists, InputMismatchException {
         user.setId(sequenceGeneratorService.getSequenceNumber(SEQUENCE_NAME));
         User u=userService.addUser(user);
         return new ResponseEntity<>(u, HttpStatus.CREATED);
@@ -60,6 +61,19 @@ public class UserController {
         return ResponseEntity.ok(new JwtResponse(jwtToken));
     }
 
+    @PostMapping(value = FORGOT_PASSWORD)
+    public ResponseEntity<?> forgotPassword(@PathVariable("username") String username,
+                                                 @PathVariable("password") String forgotPassword) throws Exception_UserDoesNotExists {
+
+        if (username.equals(null)) {
+            return new ResponseEntity<>("\"user name not found\"", HttpStatus.BAD_REQUEST);
+        }
+
+        User u=userService.forgotPassword(username,forgotPassword);
+        return new ResponseEntity<>(u,HttpStatus.OK);
+
+    }
+
     @GetMapping(value = ALL_USER)
     public ResponseEntity<List<User>> getAllUser(@RequestHeader("Authorization") String authorization) throws Exception_UserDoesNotExists {
         List<User> u= userService.getAllUsers();
@@ -68,9 +82,7 @@ public class UserController {
 
     @GetMapping(value = BY_ID)
     public ResponseEntity<?> getUser(@RequestHeader("Authorization") String authorization, @PathVariable("username") String username) throws Exception_UserDoesNotExists {
-        String token =authorization.substring(7);
-        String uname= jwtUtilToken.getUsernameFromToken(token);
-        if(username.equals(uname)) {
+        if(username!=null) {
             User u = userService.getUserByUsername(username);
             return new ResponseEntity<>(u, HttpStatus.OK);
         }
@@ -83,26 +95,4 @@ public class UserController {
         String token =authorization.substring(7);
         return jwtUtilToken.getUsernameFromToken(token);
     }
-
-
-
-
-  // Ignore this method////////
-
- /*   @GetMapping(value = COMMON_USERNAME)
-    public ResponseEntity<?> getPartialSameNameUsers(@RequestHeader("Authorization") String authorization, @PathVariable("username") String username) throws InvalidUsernameException {
-        String token =authorization.substring(7);
-        String uname= jwtUtilToken.getUsernameFromToken(token);
-        if(username.equals(uname)) {
-            List<User> users = userService.getUserByPartialName(username);
-            return new ResponseEntity<>(users, HttpStatus.OK);
-        }
-        else{
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("INVALID USER");
-        }
-    }
-    */
-
-
-
 }

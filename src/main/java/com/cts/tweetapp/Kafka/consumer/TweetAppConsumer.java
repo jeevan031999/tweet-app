@@ -20,7 +20,7 @@ public class TweetAppConsumer {
     TweetService tweetService;
 
     @KafkaListener(topics = {"tweet-app"},groupId = "tweet-app-group")
-    public void tweetpost(ConsumerRecord<Integer, String> consumerRecord) throws JsonMappingException, JsonProcessingException, InvalidUsernameException {
+    public void tweetPost(ConsumerRecord<Integer, String> consumerRecord) throws JsonMappingException, JsonProcessingException, InvalidUsernameException {
         tweetService.proceedTweet(consumerRecord);
         log.info("ConsumerRecord : {} ", consumerRecord);
     }

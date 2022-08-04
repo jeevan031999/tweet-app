@@ -48,7 +48,7 @@ public class TweetController {
             tweet.setTweetType(TweetType.NEW);
             tweet.setId(sequenceGeneratorService.getSequenceNumber(SEQUENCE_NAME));
             tweet.setUsername(username);
-            tweetAppProducer.posttweet(tweet);
+            tweetAppProducer.postTweet(tweet);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(tweet);
         }
@@ -58,14 +58,14 @@ public class TweetController {
 
     }
     @PutMapping(value = EDIT_TWEET)
-    public ResponseEntity<?> updatetweet(@PathVariable("username") String username, @PathVariable("id") int id, @RequestHeader("Authorization") String authorization, @RequestBody Tweet tweet) throws JsonProcessingException {
+    public ResponseEntity<?> updateTweet(@PathVariable("username") String username, @PathVariable("id") int id, @RequestHeader("Authorization") String authorization, @RequestBody Tweet tweet) throws JsonProcessingException {
         String token = authorization.substring(7);
         String uname = jwtUtilToken.getUsernameFromToken(token);
         if (username.equals(uname)) {
             tweet.setTweetType(TweetType.UPDATE);
             tweet.setId(id);
             tweet.setUsername(username);
-            tweetAppProducer.posttweet(tweet);
+            tweetAppProducer.postTweet(tweet);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(tweet);
         }
         else {
@@ -74,8 +74,9 @@ public class TweetController {
     }
 
     @GetMapping(value = ALL_TWEET)
-    public List<Tweet> getAllTweets(@RequestHeader("Authorization") String authorization) {
-        return tweetService.getAllTweets();
+    public ResponseEntity<List<Tweet>> getAllTweets(@RequestHeader("Authorization") String authorization) {
+        List<Tweet> tweet= tweetService.getAllTweets();
+        return ResponseEntity.status(HttpStatus.OK).body(tweet);
     }
 
     @GetMapping(value = TWEET_BY_ID)
@@ -106,7 +107,7 @@ public class TweetController {
     }
 
     @PutMapping(value = LIKE_TWEET)
-    public ResponseEntity<?> LikeTweet(@RequestHeader("Authorization") String authorization, @PathVariable("username") String username, @PathVariable("id") int id) {
+    public ResponseEntity<?> likeTweet(@RequestHeader("Authorization") String authorization, @PathVariable("username") String username, @PathVariable("id") int id) {
             tweetService.likeTweetById(id);
             return ResponseEntity.status(HttpStatus.OK).body("like successfully");
         }
@@ -116,7 +117,7 @@ public class TweetController {
     public ResponseEntity<?> comments(@RequestHeader("Authorization") String authorization, @PathVariable("username") String username, @PathVariable("id") int id, @RequestBody Comments comments) throws Exception {
             comments.setCommentId(sequenceGeneratorService.getSequenceNumber(SEQ_NAME));
             tweetService.replyTweetById(id, comments, username);
-            return ResponseEntity.status(HttpStatus.OK).body("like successfully");
+            return ResponseEntity.status(HttpStatus.OK).body(comments);
 
         }
     }

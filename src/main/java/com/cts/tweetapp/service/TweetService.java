@@ -12,8 +12,10 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -36,17 +38,23 @@ public class TweetService {
     @Autowired
     ObjectMapper objectMapper;
 
-    public boolean isUsernamePresent(String username) {
-        return userRepository.findByUsername(username) != null ? true : false;
+    private boolean isUsernamePresent(String username) {
+        if(userRepository.findByUsername(username).equals(null)){
+            return false;
+        }
+        return true;
     }
 
-    public boolean isTweetPresent(int id) {
-
-        return tweetRepository.findById(id) != null ? true : false;
+    private boolean isTweetPresent(int id) {
+        if(tweetRepository.findById(id).equals(null)){
+            return false;
+        }
+        return true;
     }
 
     // for post and update tweet
-    public void proceedTweet(ConsumerRecord<Integer, String> consumerRecord) throws JsonMappingException, JsonProcessingException, InvalidUsernameException {
+    public void proceedTweet(ConsumerRecord<Integer, String> consumerRecord) throws JsonMappingException,
+            JsonProcessingException, InvalidUsernameException {
         Tweet tweet =objectMapper.readValue(consumerRecord.value(),Tweet.class);
         log.info("tweet {}",tweet);
         switch (tweet.getTweetType()) {
@@ -89,16 +97,6 @@ public class TweetService {
 
     }
 
-
-    public Tweet likes(Tweet tweet) {
-        tweet.setLikes(tweet.getLikes() + 1);
-        return tweetRepository.save(tweet);
-    }
-
-    public void deleteTweet(Tweet tweet) {
-        tweetRepository.delete(tweet);
-    }
-
     public List<Tweet> getAllTweets() {
         return tweetRepository.findAll();
     }
@@ -107,13 +105,13 @@ public class TweetService {
         return tweetRepository.findByUsername(username);
     }
 
-
     public void deleteTweetById(int tweetId,String username) throws Exception_Tweet {
-        if(isTweetPresent(tweetId)){
+        if(isUsernamePresent(username) && isTweetPresent(tweetId)){
             tweetRepository.deleteById(tweetId);
         }
-        throw new Exception_Tweet("Tweet is not present for this id.");
-
+        else {
+            throw new Exception_Tweet("Tweet is not present for this id.");
+        }
     }
 
     public Comments replyTweetById(int id, Comments comments,String username) throws Exception_Tweet {

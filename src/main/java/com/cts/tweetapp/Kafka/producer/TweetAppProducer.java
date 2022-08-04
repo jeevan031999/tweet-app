@@ -23,7 +23,7 @@ public class TweetAppProducer {
 
     String topics = "tweet-app";
 
-    public void posttweet(Tweet tweet) throws JsonProcessingException {
+    public void postTweet(Tweet tweet) throws JsonProcessingException {
         int key=Integer.valueOf(tweet.getId());
         String value = objectMapper.writeValueAsString(tweet);
         ListenableFuture<SendResult<Integer, String>> listenableFuture = kafkaTemplate.sendDefault(key,value);
