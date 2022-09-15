@@ -61,7 +61,7 @@ public class UserService {
         if(user==null) {
             throw new Exception_UserDoesNotExists("Account not exist");
         }
-        log.info("No username found");
+        log.info(user+"");
         return user;
     }
 

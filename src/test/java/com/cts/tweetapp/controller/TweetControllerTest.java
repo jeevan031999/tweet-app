@@ -1,6 +1,5 @@
 package com.cts.tweetapp.controller;
-import com.cts.tweetapp.Kafka.producer.TweetAppProducer;
-import com.cts.tweetapp.exception.Exception_Tweet;
+
 import com.cts.tweetapp.model.Comments;
 import com.cts.tweetapp.model.Tweet;
 import com.cts.tweetapp.model.TweetType;
@@ -40,12 +39,11 @@ class TweetControllerTest {
 	@Autowired
 	MockMvc mockMvc;
 	ObjectMapper objectMapper=new ObjectMapper();
-	@Mock
-	TweetAppProducer tweetAppProducer;
+
 	@Mock
 	TweetService tweetService;
 	@InjectMocks
-	private TweetController tweetController;
+	private UserController tweetController;
 
 	@Mock
 	private SequenceGeneratorService sequenceGeneratorService;
@@ -69,7 +67,7 @@ class TweetControllerTest {
 		httpHeaders.setAll(map);
 		when(jwtUtil.getUsernameFromToken(token)).thenReturn(tweet.getUsername());
 		String json = objectMapper.writeValueAsString(tweet);
-		tweetAppProducer.postTweet(tweet);
+		tweetService.saveMethod(tweet);
 		mockMvc.perform(
 						MockMvcRequestBuilders.post("/api/v1.0/tweets/sdfrgre/add").headers(httpHeaders)
 								.content(json)
@@ -88,7 +86,7 @@ class TweetControllerTest {
 		httpHeaders.setAll(map);
 		when(jwtUtil.getUsernameFromToken(token)).thenReturn(tweet.getUsername());
 		String json = objectMapper.writeValueAsString(tweet);
-		tweetAppProducer.postTweet(tweet);
+		tweetService.saveMethod(tweet);
 		mockMvc.perform(
 						MockMvcRequestBuilders.put("/api/v1.0/tweets/sdfrgre/update/1").headers(httpHeaders)
 								.content(json)

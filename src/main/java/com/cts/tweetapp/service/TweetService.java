@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -89,7 +88,7 @@ public class TweetService {
 
     }
 
-    private void saveMethod(Tweet tweet) {
+    public void saveMethod(Tweet tweet) {
         tweetRepository.save(tweet);
         log.info("Successfully Persisted the tweet {} ", tweet);
 
@@ -133,5 +132,10 @@ public class TweetService {
         }
 
     }
+
+    public List<Comments> getCommentsById(int id){
+        return commentsRepository.findCommentsByTweetId(id);
+    }
+
 
 }
